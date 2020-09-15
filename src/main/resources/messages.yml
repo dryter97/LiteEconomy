@@ -1,0 +1,29 @@
+commands:
+  no-console: '&cConsole may not use this command'
+  no-permission: '&cSorry! You do not have permission for that!'
+  invalid-subargument: '&cSorry! %argument% is not a given sub-command for that command.'
+  insufficient-arguments: '&cPlease use command like this: &6%command% &e%usage%'
+  money:
+    message: "&aYou currently have &e$%balance%&a."
+  give:
+    invalid-player: "&cUnable to find a player with that name."
+    invalid-number: "&cPlease enter a valid number."
+    success: "&aSuccessfully gave &e%player% $%amount%. &aNew Balance: &e$%balance%"
+    error: "&cUnable to modify &e%player%&c's balance."
+  set:
+    invalid-player: "&cUnable to find a player with that name."
+    invalid-number: "&cPlease enter a valid number."
+    success: "&aSuccessfully set &e%player%&a's balance to &e%balance%"
+    error: "&cUnable to set &e%players%&c's balance."
+  take:
+    invalid-player: "&cUnable to find a player with that name."
+    invalid-number: "&cPlease enter a valid number."
+    success: "&aSuccessfully withdraw &e$%amount% &afrom &e%player%. &aNew Balance: &e$%balance%"
+    error: "&cUnable to modify &e%player%&c's balance."
+  pay:
+    invalid-player: "&cUnable to find a player with that name."
+    invalid-number: "&cPlease enter a valid number."
+    insufficient-funds: "&cYou do not have enough money to complete this request."
+    success: "&aSuccessfully gave &e$%amount% &ato &e%target%. &aNew Balance: &e$%balance%"
+    received: "&aYou received &e%amount% &afrom &e%player%"
+    error: "&cAn error occurred while trying to complete your request."

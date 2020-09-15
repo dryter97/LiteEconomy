@@ -1,0 +1,13 @@
+mysql:
+  enabled: false
+  host: ''
+  port: 3306
+  username: ''
+  password: ''
+  database: ''
+
+vault: false
+
+balance:
+  default: 0
+  negative: false

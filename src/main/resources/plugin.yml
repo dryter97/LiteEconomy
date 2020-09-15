@@ -1,0 +1,27 @@
+name: LiteEconomy
+version: ${project.version}
+main: co.ignitus.liteeconomy.LiteEconomy
+api-version: "1.13"
+authors: ["Ignitus Co"]
+description: Simple economy plugin that provides an extra economy or allows balances to be shared across servers.
+website: https://ignitus.co/
+softdepend: [Vault, PlaceholderAPI]
+
+commands:
+  liteeconomy:
+    description: Manage players balances.
+  money:
+    aliases: [balance]
+
+permissions:
+  liteeconomy.give:
+    description: Grants access to /liteeconomy give
+  liteeconomy.set:
+    description: Grants access to /liteeconomy set
+  liteeconomy.take:
+    description: Grants access to /liteeconomy take
+  liteeconomy.pay:
+    description: Grants access to /liteeconomy pay
+  liteeconomy.money:
+    description: Grants access to /money
+    default: true
