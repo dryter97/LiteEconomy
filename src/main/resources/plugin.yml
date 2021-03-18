@@ -5,7 +5,7 @@ api-version: "1.13"
 authors: ["Ignitus Co"]
 description: Simple economy plugin that provides an extra economy or allows balances to be shared across servers.
 website: https://ignitus.co/
-softdepend: [Vault, PlaceholderAPI]
+softdepend: [Vault, PlaceholderAPI, Essentials]
 
 commands:
   liteeconomy:
@@ -25,3 +25,5 @@ permissions:
   liteeconomy.money:
     description: Grants access to /money
     default: true
+  liteeconomy.convert:
+    description: Grants access to /liteeconomy convert

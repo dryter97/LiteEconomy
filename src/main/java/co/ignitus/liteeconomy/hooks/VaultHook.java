@@ -13,8 +13,8 @@ import java.util.List;
 
 public class VaultHook extends AbstractEconomy {
 
-    private LiteEconomy liteEconomy;
-    private DataSource dataSource;
+    private final LiteEconomy liteEconomy;
+    private final DataSource dataSource;
 
     public VaultHook(LiteEconomy liteEconomy) {
         this.liteEconomy = liteEconomy;

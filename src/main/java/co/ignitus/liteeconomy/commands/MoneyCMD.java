@@ -8,7 +8,7 @@ import org.bukkit.entity.Player;
 
 public class MoneyCMD extends Command {
 
-    private static LiteEconomy liteEconomy = LiteEconomy.getInstance();
+    private static final LiteEconomy liteEconomy = LiteEconomy.getInstance();
 
     public MoneyCMD(LiteEconomy liteEconomy) {
         super(liteEconomy, "money");

@@ -7,6 +7,7 @@ import co.ignitus.liteeconomy.data.Flatfile;
 import co.ignitus.liteeconomy.data.MySQL;
 import co.ignitus.liteeconomy.events.PlayerEvents;
 import co.ignitus.liteeconomy.files.MessagesFile;
+import co.ignitus.liteeconomy.hooks.EssentialsHook;
 import co.ignitus.liteeconomy.hooks.PlaceholderHook;
 import co.ignitus.liteeconomy.hooks.VaultHook;
 import lombok.Getter;
@@ -60,12 +61,16 @@ public final class LiteEconomy extends JavaPlugin {
             }
             cs.sendMessage(ChatColor.GREEN + "[LiteEconomy] VaultAPI Found. Enabling vault hook.");
             getServer().getServicesManager().register(Economy.class, new VaultHook(this), this, ServicePriority.High);
-            if(setupEconomy())
+            if (setupEconomy())
                 cs.sendMessage(ChatColor.GREEN + "[LiteEconomy] VaultAPI hook enabled.");
         }
         if (Bukkit.getPluginManager().isPluginEnabled("PlaceholderAPI")) {
             new PlaceholderHook().register();
             cs.sendMessage(ChatColor.GREEN + "[LiteEconomy] PlaceholderAPI Found. Enabling placeholders.");
+        }
+        if (Bukkit.getPluginManager().isPluginEnabled("Essentials")) {
+            EssentialsHook.setEnabled(true);
+            cs.sendMessage(ChatColor.GREEN + "[LiteEconomy] Essentials Found. Enabling essentials capabilities.");
         }
 
         new LiteEcoCMD(this);

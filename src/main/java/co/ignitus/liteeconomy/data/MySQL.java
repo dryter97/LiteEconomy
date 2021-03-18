@@ -11,6 +11,8 @@ import java.sql.Connection;
 import java.sql.PreparedStatement;
 import java.sql.ResultSet;
 import java.sql.SQLException;
+import java.util.HashMap;
+import java.util.Map;
 import java.util.UUID;
 
 import static co.ignitus.liteeconomy.util.MessageUtil.trimDouble;
@@ -98,6 +100,22 @@ public class MySQL implements DataSource {
     }
 
     @Override
+    public HashMap<UUID, Double> getBalances() {
+        final HashMap<UUID, Double> balances = new HashMap<>();
+        try (Connection connection = getDataSource().getConnection()) {
+            final PreparedStatement statement = connection.prepareStatement("SELECT * FROM `lite_economy`");
+            final ResultSet resultSet = statement.executeQuery();
+            while (resultSet.next()) {
+                final UUID uuid = UUID.fromString(resultSet.getString("uuid"));
+                final double balance = resultSet.getDouble("balance");
+                balances.put(uuid, balance);
+            }
+        } catch (SQLException ignored) {
+        }
+        return balances;
+    }
+
+    @Override
     public boolean setBalance(UUID uuid, double balance) {
         try (Connection connection = getDataSource().getConnection()) {
             PreparedStatement statement = connection.prepareStatement(
@@ -110,6 +128,33 @@ public class MySQL implements DataSource {
             statement.setDouble(2, balance);
             statement.setDouble(3, balance);
             statement.executeUpdate();
+            return true;
+        } catch (SQLException ignored) {
+            return false;
+        }
+    }
+
+    @Override
+    public boolean setBalances(HashMap<UUID, Double> balances) {
+        if (balances.isEmpty())
+            return true;
+        if (!clearBalances())
+            return false;
+        try (Connection connection = getDataSource().getConnection()) {
+            final PreparedStatement statement = connection.prepareStatement(
+                    "INSERT INTO `lite_economy`(`uuid`, `balance`) VALUES(?, ?)" +
+                            "ON DUPLICATE KEY UPDATE " +
+                            "`balance` = ?"
+            );
+            for (Map.Entry<UUID, Double> entry : balances.entrySet()) {
+                final double balance = trimDouble(entry.getValue());
+                final UUID uuid = entry.getKey();
+                statement.setString(1, uuid.toString());
+                statement.setDouble(2, balance);
+                statement.setDouble(3, balance);
+                statement.addBatch();
+            }
+            statement.executeBatch();
             return true;
         } catch (SQLException ignored) {
             return false;
@@ -154,4 +199,16 @@ public class MySQL implements DataSource {
         }
     }
 
+    @Override
+    public boolean clearBalances() {
+        try (Connection connection = getDataSource().getConnection()) {
+            final PreparedStatement statement = connection.prepareStatement(
+                    "TRUNCATE `lite_economy`"
+            );
+            statement.executeUpdate();
+            return true;
+        } catch (SQLException ex) {
+            return false;
+        }
+    }
 }

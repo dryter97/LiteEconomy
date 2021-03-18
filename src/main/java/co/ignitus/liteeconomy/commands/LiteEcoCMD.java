@@ -15,6 +15,7 @@ public class LiteEcoCMD extends Command {
     public LiteEcoCMD(LiteEconomy liteEconomy) {
         super(liteEconomy, "liteeconomy");
         this
+                .registerSubCommand(new SubConvert())
                 .registerSubCommand(new SubGive())
                 .registerSubCommand(new SubPay())
                 .registerSubCommand(new SubSet())

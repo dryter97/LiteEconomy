@@ -5,6 +5,12 @@ commands:
   insufficient-arguments: '&cPlease use command like this: &6%command% &e%usage%'
   money:
     message: "&aYou currently have &e$%balance%&a."
+  convert:
+    same-plugin: "&cYou cannot convert to the same plugin"
+    unknown-plugin: "&c%plugin% is not a supported plugin"
+    missing-plugin: "&c%plugin% is currently not enabled on the server."
+    success: "&aSuccessfully converted &e%old_plugin%&a to &e%new_plugin%"
+    error: "&cAn error occurred while trying to convert &e%old_plugin%&c to &e%new_plugin%"
   give:
     invalid-player: "&cUnable to find a player with that name."
     invalid-number: "&cPlease enter a valid number."
