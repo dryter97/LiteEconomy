@@ -5,6 +5,7 @@ import co.ignitus.liteeconomy.data.DataSource;
 import co.ignitus.liteeconomy.entities.SubCommand;
 import co.ignitus.liteeconomy.hooks.EssentialsHook;
 import co.ignitus.liteeconomy.util.MessageUtil;
+import com.earth2me.essentials.Essentials;
 import com.earth2me.essentials.api.Economy;
 import com.earth2me.essentials.api.NoLoanPermittedException;
 import com.earth2me.essentials.api.UserDoesNotExistException;
@@ -96,27 +97,33 @@ public class SubConvert implements SubCommand {
         // As a result, I'm not checking what the old plugin is.
 
         final DataSource dataSource = liteEconomy.getDataSource();
-
+        final Essentials essentials = EssentialsHook.getPlugin();
         // Export to Essentials
         if (newPlugin.equalsIgnoreCase("essentials")) {
-            try {
-                for (OfflinePlayer player : Bukkit.getOfflinePlayers()) {
-                    if (Economy.playerExists(player.getUniqueId())) Economy.resetBalance(player.getUniqueId());
-                }
-                for (Map.Entry<UUID, Double> entry : dataSource.getBalances().entrySet()) {
-                    Economy.setMoney(entry.getKey(), BigDecimal.valueOf(entry.getValue()));
-                }
-            } catch (NoLoanPermittedException | UserDoesNotExistException ignored) {
-                sender.sendMessage(MessageUtil.getMessage("commands.convert.error",
-                        "%old_plugin%", oldPlugin,
-                        "%new_plugin%", newPlugin
-                ));
-                return;
-            }
-            sender.sendMessage(MessageUtil.getMessage("commands.convert.success",
+            sender.sendMessage(MessageUtil.getMessage("commands.convert.started",
                     "%old_plugin%", oldPlugin,
                     "%new_plugin%", newPlugin
             ));
+            Bukkit.getScheduler().runTaskAsynchronously(liteEconomy, () -> {
+                try {
+                    for (UUID uuid : essentials.getUserMap().getAllUniqueUsers()) {
+                        if (Economy.playerExists(uuid)) Economy.resetBalance(uuid);
+                    }
+                    for (Map.Entry<UUID, Double> entry : dataSource.getBalances().entrySet()) {
+                        Economy.setMoney(entry.getKey(), BigDecimal.valueOf(entry.getValue()));
+                    }
+                } catch (NoLoanPermittedException | UserDoesNotExistException ignored) {
+                    sender.sendMessage(MessageUtil.getMessage("commands.convert.error",
+                            "%old_plugin%", oldPlugin,
+                            "%new_plugin%", newPlugin
+                    ));
+                    return;
+                }
+                sender.sendMessage(MessageUtil.getMessage("commands.convert.finished",
+                        "%old_plugin%", oldPlugin,
+                        "%new_plugin%", newPlugin
+                ));
+            });
             return;
         }
 
@@ -129,30 +136,35 @@ public class SubConvert implements SubCommand {
                 ));
                 return;
             }
-            final HashMap<UUID, Double> balances = new HashMap<>();
-            try {
-                for (OfflinePlayer player : Bukkit.getOfflinePlayers()) {
-                    final UUID uuid = player.getUniqueId();
-                    if (Economy.playerExists(uuid))
-                        balances.put(uuid, Economy.getMoneyExact(uuid).doubleValue());
+            sender.sendMessage(MessageUtil.getMessage("commands.convert.started",
+                    "%old_plugin%", oldPlugin,
+                    "%new_plugin%", newPlugin
+            ));
+            Bukkit.getScheduler().runTaskAsynchronously(liteEconomy, () -> {
+                final HashMap<UUID, Double> balances = new HashMap<>();
+                try {
+                    for (UUID uuid : essentials.getUserMap().getAllUniqueUsers()) {
+                        if (Economy.playerExists(uuid))
+                            balances.put(uuid, Economy.getMoneyExact(uuid).doubleValue());
+                    }
+                } catch (UserDoesNotExistException ignored) {
+                    sender.sendMessage(MessageUtil.getMessage("commands.convert.error",
+                            "%old_plugin%", oldPlugin,
+                            "%new_plugin%", newPlugin
+                    ));
+                    return;
                 }
-            } catch (UserDoesNotExistException ignored) {
-                sender.sendMessage(MessageUtil.getMessage("commands.convert.error",
-                        "%old_plugin%", oldPlugin,
-                        "%new_plugin%", newPlugin
-                ));
-                return;
-            }
-            if (dataSource.setBalances(balances))
-                sender.sendMessage(MessageUtil.getMessage("commands.convert.success",
-                        "%old_plugin%", oldPlugin,
-                        "%new_plugin%", newPlugin
-                ));
-            else
-                sender.sendMessage(MessageUtil.getMessage("commands.convert.error",
-                        "%old_plugin%", oldPlugin,
-                        "%new_plugin%", newPlugin
-                ));
+                if (dataSource.setBalances(balances))
+                    sender.sendMessage(MessageUtil.getMessage("commands.convert.finished",
+                            "%old_plugin%", oldPlugin,
+                            "%new_plugin%", newPlugin
+                    ));
+                else
+                    sender.sendMessage(MessageUtil.getMessage("commands.convert.error",
+                            "%old_plugin%", oldPlugin,
+                            "%new_plugin%", newPlugin
+                    ));
+            });
             return;
         }
         sender.sendMessage(MessageUtil.getMessage("commands.convert.unknown-plugin",

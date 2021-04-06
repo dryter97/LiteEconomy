@@ -25,5 +25,8 @@ permissions:
   liteeconomy.money:
     description: Grants access to /money
     default: true
+  liteeconomy.money.others:
+    description: Grants access to /money [user]
+    default: true
   liteeconomy.convert:
     description: Grants access to /liteeconomy convert
