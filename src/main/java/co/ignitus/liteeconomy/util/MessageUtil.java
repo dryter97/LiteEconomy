@@ -41,4 +41,11 @@ public class MessageUtil {
     public static String getMessage(String path, String... replace) {
         return format(LiteEconomy.getInstance().getMessagesFile().getFileConfiguration().getString(path, "&cUnknown Message"), replace);
     }
+
+    public static String getListMessage(String path, String... replace) {
+        final List<String> messages = LiteEconomy.getInstance().getMessagesFile().getFileConfiguration().getStringList(path);
+        return messages.stream().map(message -> format(message, replace)).collect(Collectors.joining("\n"));
+    }
+
+
 }

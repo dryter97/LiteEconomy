@@ -30,3 +30,6 @@ permissions:
     default: true
   liteeconomy.convert:
     description: Grants access to /liteeconomy convert
+  liteeconomy.baltop:
+    default: true
+    description: Grants access to /liteeconomy baltop
